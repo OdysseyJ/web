@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>연락처 관리 시스템 by node js</title>
+  </head>
+  <body>
+    <h1>연락처 관리 프로그램 by web</h1>
+
+    <p>검색</p>
+    <form action="/search" method="post">
+      <input
+        type="text"
+        name="search_name"
+        id="search_name"
+        placeholder="이름을 입력하세요"
+      />
+    </form>
+    <button class="search">검색</button>
+
+    <p>삽입</p>
+    <form action="/insert" method="post">
+      <input
+        type="text"
+        name="insert_name"
+        id="insert_name"
+        placeholder="이름을 입력하세요"
+      />
+      <input
+        type="text"
+        name="insert_number"
+        id="insert_number"
+        placeholder="전화번호를 입력하세요"
+      />
+    </form>
+    <button class="insert">삽입</button>
+
+    <p>삭제</p>
+    <form action="/delete" method="post">
+      <input
+        type="text"
+        name="delete_name"
+        id="delete_name"
+        placeholder="이름을 입력하세요"
+      />
+    </form>
+    <button class="delete">삭제</button>
+
+    <div class="result"></div>
+    <ol class="view_list"></ol>
+
+    <script>
+      // 검색 버튼을 눌리면 실행되는 리스너.
+      document.querySelector(".search").addEventListener("click", function() {
+        // 입력해야하는 input데이터 가져오기
+        var inputname = document.querySelector("#search_name").value;
+
+        // 화면 초기화
+        var cell = document.querySelector(".view_list");
+        while (cell.hasChildNodes()) {
+          cell.removeChild(cell.firstChild);
+        }
+        var cell2 = document.querySelector(".result");
+        while (cell2.hasChildNodes()) {
+          cell2.removeChild(cell2.firstChild);
+        }
+
+        // Ajax 요청 보내기
+        sendSearchAjax("http://127.0.0.1:3000/search", inputname);
+      });
+
+      // 삽입 버튼 리스너
+      document.querySelector(".insert").addEventListener("click", function() {
+        var inputname = document.querySelector("#insert_name").value;
+        var inputnumber = document.querySelector("#insert_number").value;
+        var cell = document.querySelector(".view_list");
+
+        // 화면 초기화
+        while (cell.hasChildNodes()) {
+          cell.removeChild(cell.firstChild);
+        }
+        var cell2 = document.querySelector(".result");
+        while (cell2.hasChildNodes()) {
+          cell2.removeChild(cell2.firstChild);
+        }
+
+        // Ajax 요청 보내기.
+        sendInsertAjax("http://127.0.0.1:3000/insert", inputname, inputnumber);
+      });
+
+      // 삭제 버튼 리스너
+      document.querySelector(".delete").addEventListener("click", function() {
+        var inputname = document.querySelector("#delete_name").value;
+        var cell = document.querySelector(".view_list");
+
+        // 화면 초기화
+        while (cell.hasChildNodes()) {
+          cell.removeChild(cell.firstChild);
+        }
+        var cell2 = document.querySelector(".result");
+        while (cell2.hasChildNodes()) {
+          cell2.removeChild(cell2.firstChild);
+        }
+
+        // Ajax 요청 보내기
+        sendDeleteAjax("http://127.0.0.1:3000/delete", inputname);
+      });
+
+      // 삭제 AJAX요청
+      function sendDeleteAjax(url, data) {
+        // 삭제 요청할 이름 담기
+        var data = { name: data };
+        // json형태로 만들기
+        data = JSON.stringify(data);
+        // http request형태로 선언
+        var xhr = new XMLHttpRequest();
+        // post형식 / 전송할 url 설정
+        xhr.open("POST", url);
+        // 전송 옵션
+        xhr.setRequestHeader("Content-Type", "application/json");
+        // 데이터 전송
+        xhr.send(data);
+        // request에 대한 response
+        xhr.addEventListener("load", function() {
+          // response에서 온 응답 JSON형태로 파싱
+          var result = JSON.parse(xhr.responseText);
+          // 결과가 ok인지 아닌지 보기
+          if (result.result !== "ok") return;
+          // HTML에 띄우기
+          document.querySelector(".result").innerHTML =
+            result.data + " 삭제성공";
+        });
+      }
+
+      // 삽입 AJAX요청
+      function sendInsertAjax(url, name, number) {
+        var data = { name: name, number: number };
+        data = JSON.stringify(data);
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(data);
+        //제대로올경우
+        xhr.addEventListener("load", function() {
+          var result = JSON.parse(xhr.responseText);
+          if (result.result !== "ok") return;
+          document.querySelector(".result").innerHTML =
+            result.data.name + " " + result.data.number + " 삽입성공";
+        });
+      }
+
+      // 수정 AJAX요청
+      function sendUpdateAjax(url, id, inputname, inputnumber) {
+        var data = { id: id, inputname: inputname, inputnumber: inputnumber };
+        data = JSON.stringify(data);
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(data);
+        //제대로올경우
+        xhr.addEventListener("load", function() {
+          var result = JSON.parse(xhr.responseText);
+          if (result.result !== "ok") return;
+          document.querySelector(".result").innerHTML =
+            result.data.inputname + " " + result.data.inputnumber + " 수정성공";
+        });
+      }
+
+      // 검색 AJAX요청
+      function sendSearchAjax(url, data) {
+        var data = { name: data };
+        data = JSON.stringify(data);
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", url);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(data);
+        //제대로올경우
+        xhr.addEventListener("load", function() {
+          var result = JSON.parse(xhr.responseText);
+          if (result.result !== "ok") return;
+
+          // 검색시 결과로 검색결과 리스트를 받기 때문에
+          // 표 형태로 출력해줌.
+          // 제목 추가
+          var title1 = document.createElement("div");
+          title1.innerHTML =
+            "같은 이름의 개수 : " + result.sameList.length + "개";
+          document.querySelector(".view_list").appendChild(title1);
+          // 같은 이름 리스트 추가
+          result.sameList.forEach(element => {
+            var ol_li = document.createElement("li");
+            var ol_input_name = document.createElement("input");
+            var ol_input_number = document.createElement("input");
+            var ol_button = document.createElement("button");
+            ol_input_name.className = "inputname" + element.id;
+            ol_input_number.className = "inputnumber" + element.id;
+            ol_input_name.placeholder = "수정할 이름";
+            ol_input_number.placeholder = "수정할 번호";
+            ol_button.className = "update" + element.id;
+            ol_button.textContent = "수정하기";
+            ol_li.innerHTML = element.name + " " + element.number;
+            document.querySelector(".view_list").appendChild(ol_li);
+            document.querySelector(".view_list").appendChild(ol_input_name);
+            document.querySelector(".view_list").appendChild(ol_input_number);
+            document.querySelector(".view_list").appendChild(ol_button);
+          });
+          // 제목 추가
+          var title2 = document.createElement("div");
+          title2.innerHTML =
+            "같은 성을 가진 이름의 개수 : " +
+            result.lastNameSameList.length +
+            "개";
+          document.querySelector(".view_list").appendChild(title2);
+          // 같은 성을 가진 리스트 추가
+          result.lastNameSameList.forEach(element => {
+            var ol_li = document.createElement("li");
+            ol_li.innerHTML = element.name + " " + element.number;
+            document.querySelector(".view_list").appendChild(ol_li);
+          });
+          // 수정하기 버튼 이벤트 리스너.
+          // 수정버튼 전부다 찾기
+          const buttonlist = document.querySelectorAll("[class^=update]");
+          // 각 수정버튼별로 이벤트리스너 달기
+          // 각 수정버튼의 id를 update+게시글id (ex update14)
+          // 이런식으로 줬음.
+          buttonlist.forEach(element => {
+            element.addEventListener("click", () => {
+              // update뒤의 숫자 찾기
+              const id = element.className.substring(
+                6,
+                element.className.length
+              );
+              // 각 연락처별 수정버튼 옆에 input의 id역시 inputname14, inputnumber14 이런식으로 부여했음.
+              // input에 어떤값을 넣었는지 찾기.
+              const name = ".inputname" + id;
+              const number = ".inputnumber" + id;
+              const inputname = document.querySelector(name).value;
+              const inputnumber = document.querySelector(number).value;
+              // 넣은 값으로 수정 AJAX요청 보내기.
+              sendUpdateAjax(
+                "http://127.0.0.1:3000/update",
+                id,
+                inputname,
+                inputnumber
+              );
+            });
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
