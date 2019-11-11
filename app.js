@@ -50,10 +50,13 @@ app.post("/insert", async (req, res) => {
         number: req.body.number
       });
     }
-  } catch (e) {}
-  // check validation.
-  var responseData = { result: "ok", data: req.body };
-  res.json(responseData);
+
+    // check validation.
+    var responseData = { result: "ok", data: req.body };
+    res.json(responseData);
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 // search 작업시 라우팅
@@ -86,7 +89,9 @@ app.post("/search", async (req, res) => {
       // res에 실어서 전송.
       res.json(responseData);
     }
-  } catch (e) {}
+  } catch (e) {
+    console.log(e);
+  }
   // check validation.
 });
 
@@ -101,6 +106,7 @@ app.post("/delete", async (req, res) => {
           name: req.body.name
         }
       });
+      console.log(find);
 
       // 삭제
       await db.User.destroy({
@@ -108,12 +114,15 @@ app.post("/delete", async (req, res) => {
           id: find.dataValues.id
         }
       });
+
+      // 응답 데이터 만들기
+      var responseData = { result: "ok", data: req.body.name };
+      // 데이터 전송
+      res.json(responseData);
     }
-  } catch (e) {}
-  // 응답 데이터 만들기
-  var responseData = { result: "ok", data: req.body.name };
-  // 데이터 전송
-  res.json(responseData);
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 // 수정 작업 라우팅
@@ -128,9 +137,12 @@ app.post("/update", async (req, res) => {
         }
       }
     );
-  } catch (e) {}
-  // 응답 데이터 만들기
-  var responseData = { result: "ok", data: req.body };
-  // 데이터 전송
-  res.json(responseData);
+
+    // 응답 데이터 만들기
+    var responseData = { result: "ok", data: req.body };
+    // 데이터 전송
+    res.json(responseData);
+  } catch (e) {
+    console.log(e);
+  }
 });

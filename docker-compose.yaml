@@ -1,0 +1,35 @@
+version: "3.1"
+
+networks:
+  app-tier:
+    driver: bridge
+services:
+  mysql:
+    networks:
+      - app-tier
+    image: mysql
+    container_name: mysql_container
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password1
+      - MYSQL_USER=user1
+      - MYSQL_PASSWORD=password1
+      - MYSQL_DATABASE=user1
+  app:
+    networks:
+      - app-tier
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules # Remove this if you have pure JS dependencies
+    restart: always
+    ports:
+      - "3000:3000"
+    links:
+      - mysql
+    depends_on:
+      - mysql

@@ -1,9 +1,10 @@
 {
   "development": {
-    "username": "root",
-    "password": "galaxy3254@",
-    "database": "users",
-    "host": "127.0.0.1",
+    "username": "user1",
+    "password": "password1",
+    "database": "user1",
+    "host": "mysql",
+    "port": 3306,
     "dialect": "mysql",
     "operatorsAliases": false
   },
