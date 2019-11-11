@@ -14,5 +14,6 @@
 ## Writer
 ##### SeongWoon Jeong (odysseyj@naver.com) / (github.com/OdysseyJ)
 
-##### You can use a controller to hold, lower, rotate, and move objects.
-##### Fix the problem within a half hour and try to escape the room!
+## Detail Comment
+##### https://odysseyj.tistory.com/46
+##### Wiki in this repository https://github.com/OdysseyJ/web/wiki
