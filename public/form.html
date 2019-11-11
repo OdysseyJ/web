@@ -86,8 +86,21 @@
           cell2.removeChild(cell2.firstChild);
         }
 
-        // Ajax 요청 보내기.
-        sendInsertAjax("http://127.0.0.1:3000/insert", inputname, inputnumber);
+        // 예외 처리 (01012345678)의 숫자형태만 받기
+        if (
+          inputnumber.length === 11 &&
+          inputnumber.substring(0, 3) === "010"
+        ) {
+          // Ajax 요청 보내기.
+          sendInsertAjax(
+            "http://127.0.0.1:3000/insert",
+            inputname,
+            inputnumber
+          );
+        } else {
+          var result = document.querySelector(".result");
+          result.innerHTML = "입력 형식이 올바르지 않습니다. 예) 01012345678";
+        }
       });
 
       // 삭제 버튼 리스너
@@ -239,12 +252,23 @@
               const inputname = document.querySelector(name).value;
               const inputnumber = document.querySelector(number).value;
               // 넣은 값으로 수정 AJAX요청 보내기.
-              sendUpdateAjax(
-                "http://127.0.0.1:3000/update",
-                id,
-                inputname,
-                inputnumber
-              );
+              // 예외 처리 (01012345678)의 숫자형태만 받기
+              if (
+                inputnumber.length === 11 &&
+                inputnumber.substring(0, 3) === "010"
+              ) {
+                // Ajax 요청 보내기.
+                sendUpdateAjax(
+                  "http://127.0.0.1:3000/update",
+                  id,
+                  inputname,
+                  inputnumber
+                );
+              } else {
+                var result = document.querySelector(".result");
+                result.innerHTML =
+                  "입력 형식이 올바르지 않습니다. 예) 01012345678";
+              }
             });
           });
         });
