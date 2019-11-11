@@ -16,4 +16,4 @@
 
 ## Detail Comment
 ##### https://odysseyj.tistory.com/46
-##### Wiki in this repository https://github.com/OdysseyJ/web/wiki
+##### Wiki in this repository https://github.com/OdysseyJ/web/wiki/Report
