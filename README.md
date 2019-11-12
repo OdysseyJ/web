@@ -4,6 +4,7 @@
 ## Getting Started
 ##### You need to install docker from Docker(https://www.docker.com/).
 ##### git clone https://github.com/OdysseyJ/web/  << clone repository on your computer
+##### docker pull mysql
 ##### docker-compose up --build << if you want to start server
 ##### docker-compose down << if you want to close server
 
